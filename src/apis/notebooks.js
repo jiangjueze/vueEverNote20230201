@@ -1,47 +1,53 @@
 import request from "../helpers/request";
-import {friendlyDate} from '@/helpers/util'
+import { friendlyDate } from "@/helpers/util";
 
 const URL = {
-  GET:'/notebooks',
-  ADD:'/notebooks',
-  UPDATE:'/notebooks/:id',
-  DELETE:'/notebooks/:id'
-}
+  GET: "/notebooks",
+  ADD: "/notebooks",
+  UPDATE: "/notebooks/:id",
+  DELETE: "/notebooks/:id"
+};
 
 export default {
-  getAll(){
-    return new Promise((resolve,reject) => {
-      request(URL.GET).then(res => {
-        res.data = res.data.sort((notebook1, notebook2) => notebook1.createdAt < notebook2.createdAt ? 1 : -1)
-        res.data.forEach(notebook => {
-            notebook.createdAtFriendly = friendlyDate(notebook.createdAt)
-            notebook.updatedAtFriendly = friendlyDate(notebook.updatedAt)
+  getAll() {
+    return new Promise((resolve, reject) => {
+      request(URL.GET)
+        .then(res => {
+          res.data = res.data.sort((notebook1, notebook2) =>
+            notebook1.createdAt < notebook2.createdAt ? 1 : -1
+          );
+          res.data.forEach(notebook => {
+            notebook.createdAtFriendly = friendlyDate(notebook.createdAt);
+            notebook.updatedAtFriendly = friendlyDate(notebook.updatedAt);
+          });
+          resolve(res);
         })
-        resolve(res)
-      }).catch(err => {
-        reject(err)
-      })
-    })
+        .catch(err => {
+          reject(err);
+        });
+    });
   },
 
   // {title=''} = {title:''}这种写法意思是没传入参数就看后面的默认值，传入参数(任意对象)了就看前面的默认值
-  updateNotebook(notebookId,{title=''} = {title:''}){
-    return request(URL.UPDATE.replace(':id',notebookId),'PATCH',{title})
+  updateNotebook(notebookId, { title = "" } = { title: "" }) {
+    return request(URL.UPDATE.replace(":id", notebookId), "PATCH", { title });
   },
 
-  deleteNotebook(notebookId){
-    return request(URL.DELETE.replace(':id',notebookId),'DELETE')
+  deleteNotebook(notebookId) {
+    return request(URL.DELETE.replace(":id", notebookId), "DELETE");
   },
 
-  addNoteBook({title=''} = {title:''}){
-    return new Promise((resolve,reject) => {
-      request(URL.ADD,'POST',{title}).then(res => {
-        res.data.createdAtFriendly = friendlyDate(res.data.createdAt)
-        res.data.updatedAtFriendly = friendlyDate(res.data.updatedAt)
-        resolve(res)
-      }).catch(err => {
-        reject(err)
-      })
-    })
+  addNotebook({ title = "" } = { title: "" }) {
+    return new Promise((resolve, reject) => {
+      request(URL.ADD, "POST", { title })
+        .then(res => {
+          res.data.createdAtFriendly = friendlyDate(res.data.createdAt);
+          res.data.updatedAtFriendly = friendlyDate(res.data.updatedAt);
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
-}
+};
