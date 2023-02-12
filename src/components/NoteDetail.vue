@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth";
+// import Auth from "@/apis/auth";
 import NoteSidebar from "@/components/NoteSidebar.vue";
 // import Bus from "@/helpers/bus";
 import _ from "lodash";
@@ -63,11 +63,12 @@ export default {
   },
 
   created() {
-    Auth.getInfo().then(res => {
-      if (!res.isLogin) {
-        this.$router.push({ path: "/login" });
-      }
-    });
+    this.checkLogin({ path: "/login" })
+    // Auth.getInfo().then(res => {
+    //   if (!res.isLogin) {
+    //     this.$router.push({ path: "/login" });
+    //   }
+    // });
   },
 
   computed: {
@@ -80,7 +81,7 @@ export default {
   methods: {
     ...mapMutations(["setCurNote"]),
 
-    ...mapActions(["updateNote", "deleteNote"]),
+    ...mapActions(["updateNote", "deleteNote",'checkLogin']),
     // 这个test是用来测试created阶段获取curNote不使用eventBus行不行的
     // test(val){
     //   this.curNote = val.find(note => note.id == this.$route.query.noteId) || {}

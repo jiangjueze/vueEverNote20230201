@@ -55,6 +55,7 @@
 <script>
 import Auth from "@/apis/auth";
 import Bus from '@/helpers/bus'
+import {mapGetters,mapActions} from 'vuex'
 
 // Auth.getInfo().then(data => {
 //   console.log(data)
@@ -84,6 +85,11 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      loginUser:'login',
+      registerUser:'register'
+    }),
+
     showRegister() {
       this.isShowRegister = true;
       this.isShowLogin = false;
@@ -108,13 +114,13 @@ export default {
       }
       // console.log("开始注册，用户名是", this.register.username);
       // console.log("开始注册，密码是", this.register.password);
-      Auth.register({
+      this.registerUser({
         username: this.register.username,
         password: this.register.password,
-      }).then((data) => {
+      }).then(() => {
         this.register.isError = false;
         this.register.notice = "";
-        Bus.$emit('userInfo',{username:this.register.username})
+        // Bus.$emit('userInfo',{username:this.register.username})
         this.$router.push({path:'notebooks'})
       }).catch(data => {
         this.register.isError = true;
@@ -137,14 +143,14 @@ export default {
       }
       // console.log("开始登录，用户名是", this.login.username);
       // console.log("开始登录，密码是", this.login.password);
-      Auth.login({
+      this.loginUser({
         username: this.login.username,
         password: this.login.password,
-      }).then((data) => {
+      }).then(() => {
         // console.log('登录成功，开始跳转...');
         this.login.isError = false;
         this.login.notice = "";
-        Bus.$emit('userInfo',{username:this.login.username})
+        // Bus.$emit('userInfo',{username:this.login.username})
         this.$router.push({path:'notebooks'})
       }).catch(data => {
         // console.log(data,'data')

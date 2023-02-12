@@ -36,17 +36,17 @@ export default {
   },
 
   created(){
-    Auth.getInfo().then(res => {
-      if(!res.isLogin){
-        this.$router.push({path:'/login'})
-      }
-    })
+    this.checkLogin({path:'/login'})
+    // Auth.getInfo().then(res => {
+    //   if(!res.isLogin){
+    //     this.$router.push({path:'/login'})
+    //   }
+    // })
 
     // Notebooks.getAll().then(res => {
     //   this.notebooks = res.data
     // })
     // this.$store.dispatch('getNotebooks')
-    // this.getNotebooks()
     // this.getNotebooks()
     this.getNotebooks()
   },
@@ -60,7 +60,8 @@ export default {
       'getNotebooks',
       'addNotebook',
       'updateNotebook',
-      'deleteNotebook'
+      'deleteNotebook',
+      'checkLogin'
     ]),
 
     onCreate(){

@@ -35,6 +35,7 @@ const mutations = {
   },
 
   deleteNote(state, payload) {
+    console.log(111)
     state.notes = state.notes.filter(note => note.id !== payload.noteId);
   },
 
@@ -70,7 +71,7 @@ const actions = {
 
   deleteNote({ commit }, { noteId }) {
     return Note.deleteNote({ noteId }).then(res => {
-      commit("deleteNotebook", { noteId });
+      commit("deleteNote", { noteId });
       Message.success(res.msg);
     });
   }
