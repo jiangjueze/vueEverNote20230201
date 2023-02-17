@@ -24,7 +24,7 @@
         <span>所属笔记本：{{ belongTo }}</span>
 
         <a class="btn action" @click="onRevert">恢复</a>
-        <a class="btn action" @click="onDelete">恢复删除</a>
+        <a class="btn action" @click="onDelete">彻底删除</a>
       </div>
       <div class="note-title">
         <span>{{ curTrashNote.title }}</span>
@@ -37,66 +37,65 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth";
+// import Auth from "@/apis/auth";
 import MarkdownIt from "markdown-it";
-import Trash from '@/apis/trash'
+import { mapGetters, mapActions, mapMutations } from "vuex";
+// import Trash from "@/apis/trash";
 
 let md = new MarkdownIt();
 
 export default {
   data() {
     return {
-      msg: "回收站",
-      curTrashNote: {
-        id: 1,
-        title: "我的笔记",
-        content: "## hello",
-        createdAtFriendly: "两小时前",
-        updatedAtFriendly: "刚刚",
-      },
-      belongTo: "我的笔记本",
-      trashNotes: [
-        {
-          id: 2,
-          title: "我的笔记",
-          content: "## hello",
-          createdAtFriendly: "两小时前",
-          updatedAtFriendly: "刚刚",
-        },
-        {
-          id:3,
-          title:'我的笔记',
-          content:'## hello',
-          createdAtFriendly:'两小时前',
-          updatedAtFriendly:'刚刚'
-        },
-      ],
+      belongTo: "我的笔记本"
     };
   },
 
   created() {
-    Auth.getInfo().then((res) => {
-      if (!res.isLogin) {
-        this.$router.push({ path: "/login" });
-      }
+    // Auth.getInfo().then(res => {
+    //   if (!res.isLogin) {
+    //     this.$router.push({ path: "/login" });
+    //   }
+    // });
+    this.checkLogin({ path: "/login" });
+    this.getTrashNotes().then(() => {
+      this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId });
     });
   },
 
   computed: {
+    ...mapGetters(["trashNotes", "curTrashNote"]),
+
     compiledMarkdown() {
       return md.render(this.curTrashNote.content || "");
-    },
+    }
   },
 
   methods: {
+    ...mapMutations(["setCurTrashNote"]),
+
+    ...mapActions([
+      "checkLogin",
+      "deleteTrashNote",
+      "revertTrashNote",
+      "getTrashNotes"
+    ]),
+
     onDelete() {
       console.log("delete");
+      this.deleteTrashNote({ noteId: this.curTrashNote.id });
     },
 
     onRevert() {
       console.log("revert");
-    },
+      this.revertTrashNote({ noteId: this.curTrashNote.id });
+    }
   },
+
+  beforeRouteUpdate(to, from, next) {
+    this.setCurTrashNote({ curTrashNoteId: to.query.noteId });
+    next();
+  }
 };
 </script>
 
@@ -110,8 +109,8 @@ export default {
   background-color: #fff;
   flex: 1;
 
-  .note-bar{
-    .action{
+  .note-bar {
+    .action {
       float: right;
       margin-left: 10px;
       padding: 2px 4px;
