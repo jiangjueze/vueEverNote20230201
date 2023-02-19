@@ -88,6 +88,7 @@ export default {
     // }
 
     onUpdateNote: _.debounce(function() {
+      if(!this.curNote.id) return
       this.updateNote({
         noteId: this.curNote.id,
         title: this.curNote.title,

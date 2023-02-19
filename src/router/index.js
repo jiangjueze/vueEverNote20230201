@@ -5,6 +5,7 @@ import Login from '@/components/Login'
 import Notebooks from '@/components/NotebookList'
 import Note from '@/components/NoteDetail'
 import Trash from '@/components/TrashDetail'
+import VueRouter from 'vue-router'
 
 Vue.use(Router)
 

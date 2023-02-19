@@ -46,9 +46,7 @@ let md = new MarkdownIt();
 
 export default {
   data() {
-    return {
-      belongTo: "我的笔记本"
-    };
+    return {};
   },
 
   created() {
@@ -58,13 +56,18 @@ export default {
     //   }
     // });
     this.checkLogin({ path: "/login" });
+    this.getNotebooks()
     this.getTrashNotes().then(() => {
       this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId });
+      this.$router.replace({
+        path:'/trash',
+        query:{noteId:this.curTrashNote.id}
+      })
     });
   },
 
   computed: {
-    ...mapGetters(["trashNotes", "curTrashNote"]),
+    ...mapGetters(["trashNotes", "curTrashNote",'belongTo']),
 
     compiledMarkdown() {
       return md.render(this.curTrashNote.content || "");
@@ -78,17 +81,34 @@ export default {
       "checkLogin",
       "deleteTrashNote",
       "revertTrashNote",
-      "getTrashNotes"
+      "getTrashNotes",
+      'getNotebooks'
     ]),
 
     onDelete() {
-      console.log("delete");
-      this.deleteTrashNote({ noteId: this.curTrashNote.id });
+      this.$confirm('删除后将无法恢复','确定删除？',{
+        confirmButtonText:'确定',
+        cancelButtonText:'取消',
+        type:'warning'
+      }).then(() => {
+        return this.deleteTrashNote({ noteId: this.curTrashNote.id })
+      }).then(() => {
+        this.setCurTrashNote({});
+        this.$router.replace({
+          path:'/trash',
+          query:{noteId:this.curTrashNote.id}
+        })
+      })
     },
 
     onRevert() {
-      console.log("revert");
-      this.revertTrashNote({ noteId: this.curTrashNote.id });
+      this.revertTrashNote({ noteId: this.curTrashNote.id }).then(() => {
+        this.setCurTrashNote();
+        this.$router.replace({
+          path:'/trash',
+          query:{noteId:this.curTrashNote.id}
+        })
+      })
     }
   },
 

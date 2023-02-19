@@ -94,8 +94,6 @@ export default {
         cancelButtonText:'取消',
         type:'warning'
       }).then(() => {
-        console.log('111')
-        console.log(this.deleteNotebook)
         this.deleteNotebook({notebookId:notebook.id})
         // this.$store.dispatch('deleteNotebook',{notebookId:notebook.id})
       })

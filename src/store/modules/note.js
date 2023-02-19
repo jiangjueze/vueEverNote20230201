@@ -10,12 +10,12 @@ const getters = {
   notes: state => state.notes || [],
   curNote: state => {
     if (!Array.isArray(state.notes)) {
-      return {};
+      return {title:'',content:''};
     }
     if (!state.curNoteId) {
-      return state.notes[0] || {}; // 不加这个容易报错，当notebook为[]的时候
+      return state.notes[0] || {title:'',content:''}; // 不加这个容易报错，当notebook为[]的时候
     }
-    return state.notes.find(note => note.id == state.curNoteId) || {};
+    return state.notes.find(note => note.id == state.curNoteId) || {title:'',content:''};
   }
 };
 
