@@ -47,9 +47,10 @@ export default {
         // this.$store.commit("setCurBook", {
         //   curBookId: this.$route.query.notebookId
         // });
+        console.log(this.notebooks)
         this.setCurBook({ curBookId: this.$route.query.notebookId });
-        // console.log(this.curBook, "111");
-        return this.getNotes({ notebookId: this.curBook.id });
+        console.log(this.curBook, "111");
+        if(this.notebooks.length) return this.getNotes({ notebookId: this.curBook.id });
       })
       .then(() => {
         // this.$store.commit("setCurNote", {
